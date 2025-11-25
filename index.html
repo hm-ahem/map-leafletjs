@@ -10,378 +10,215 @@
 
   <style>
     :root {
-      --bg-color: #ffffff;
-      --card-bg: rgba(255, 255, 255, 0.85); /* More transparency for glass effect */
+      /* TRANSPARENT BACKGROUNDS */
+      --bg-color: transparent; 
+      
+      /* Glass UI colors */
+      --card-bg: rgba(255, 255, 255, 0.75); 
       --text-main: #2c3e50;
-      --text-sub: #7f8c8d;
-      --accent-color: #007aff; /* iOS Blue */
+      --text-sub: #5d6d7e;
+      --accent-color: #007aff;
       --danger-color: #ff3b30;
-      --shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-      --border: 1px solid rgba(255, 255, 255, 0.4);
+      --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      --border: 1px solid rgba(255, 255, 255, 0.5);
     }
 
     body.dark {
-      --bg-color: #121212;
-      --card-bg: rgba(28, 28, 30, 0.85);
+      --card-bg: rgba(20, 20, 20, 0.85);
       --text-main: #ffffff;
-      --text-sub: #a1a1aa;
-      --accent-color: #0a84ff;
-      --shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+      --text-sub: #b0b0b0;
+      --accent-color: #409cff;
+      --shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
       --border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    body {
+    html, body {
       margin: 0;
       padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background: var(--bg-color);
+      width: 100%;
+      height: 100%;
+      background: transparent; /* KEY CHANGE: Transparent Body */
       overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
 
     #map {
-      width: 100vw;
-      height: 100vh;
+      width: 100%;
+      height: 100%;
       z-index: 1;
+      background: transparent;
     }
 
-    /* --- Theme Toggle (Top Right) --- */
-    .theme-toggle {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      z-index: 1000;
-      background: var(--card-bg);
-      color: var(--text-main);
-      border: var(--border);
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-weight: 600;
-      font-size: 0.9rem;
-      cursor: pointer;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      transition: transform 0.2s ease;
-    }
-
-    .theme-toggle:hover {
-      transform: scale(1.05);
-    }
-
-    /* --- Floating Info Bar (The New UI) --- */
+    /* Floating Info Card */
     .info-card {
       position: absolute;
-      bottom: 40px;
+      bottom: 20px;
       left: 50%;
-      transform: translateX(-50%) translateY(200px); /* Hidden initially */
-      
+      transform: translateX(-50%) translateY(200px);
       width: 90%;
-      max-width: 700px; /* Wide format */
-      
+      max-width: 600px;
       background: var(--card-bg);
-      backdrop-filter: blur(20px); /* Heavy Blur */
-      -webkit-backdrop-filter: blur(20px);
-      
-      border-radius: 24px;
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border-radius: 20px;
       border: var(--border);
       box-shadow: var(--shadow);
-      
       display: flex;
       align-items: center;
       justify-content: space-between;
-      
-      padding: 20px 30px;
+      padding: 15px 25px;
       z-index: 1000;
-      transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1); /* Smooth spring-like slide */
+      transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
     }
 
     .info-card.active {
       transform: translateX(-50%) translateY(0);
     }
 
-    /* Left Section: Name & Status */
-    .card-left {
-      display: flex;
-      flex-direction: column;
-      flex: 1; /* Takes available space */
-      padding-right: 20px;
-    }
-
-    .info-title {
-      font-size: 1.3rem;
-      font-weight: 700;
+    /* Left Side */
+    .card-left h3 {
+      margin: 0 0 5px 0;
+      font-size: 1.1rem;
       color: var(--text-main);
-      margin: 0 0 4px 0;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
-
-    .status-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
     .badge {
       background: var(--danger-color);
       color: white;
-      padding: 2px 8px;
-      border-radius: 12px;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.5px;
+      padding: 3px 8px;
+      border-radius: 8px;
+      font-size: 0.65rem;
+      font-weight: 800;
       text-transform: uppercase;
     }
-
     .sub-text {
       color: var(--text-sub);
-      font-size: 0.85rem;
+      font-size: 0.8rem;
     }
 
-    /* Right Section: Metrics */
+    /* Right Side */
     .card-right {
       display: flex;
-      align-items: center;
-      gap: 20px;
+      gap: 15px;
+      text-align: right;
+    }
+    .metric span { display: block; }
+    .metric-val { font-size: 1.2rem; font-weight: 700; color: var(--accent-color); }
+    .metric-lbl { font-size: 0.7rem; color: var(--text-sub); text-transform: uppercase; }
+
+    /* Divider */
+    .divider { width: 1px; background: var(--text-sub); opacity: 0.2; margin: 0 10px; }
+
+    /* Theme Toggle */
+    .theme-toggle {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      z-index: 1000;
+      background: var(--card-bg);
+      color: var(--text-main);
+      border: var(--border);
+      padding: 6px 12px;
+      border-radius: 15px;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      font-size: 0.8rem;
+      font-weight: 600;
     }
 
-    .metric {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      min-width: 60px;
-    }
-
-    .metric-value {
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: var(--accent-color);
-      font-variant-numeric: tabular-nums;
-    }
-
-    .metric-label {
-      font-size: 0.75rem;
-      color: var(--text-sub);
-      font-weight: 500;
-      text-transform: uppercase;
-    }
-
-    /* Vertical Divider */
-    .divider {
-      width: 1px;
-      height: 40px;
-      background: rgba(128, 128, 128, 0.2);
-    }
-
-    /* Mobile Responsiveness */
-    @media (max-width: 600px) {
-      .info-card {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 15px;
-        bottom: 20px;
-        padding: 20px;
-        border-radius: 20px;
-      }
-      
-      .card-right {
-        width: 100%;
-        justify-content: space-between;
-      }
-      
-      .metric {
-        align-items: flex-start;
-      }
-      
-      .divider {
-        display: none;
-      }
-    }
-
-    /* Loading Spinner */
-    .loading-overlay {
+    /* Loader */
+    .loader {
       position: absolute;
       inset: 0;
-      background: var(--bg-color);
+      background: rgba(255,255,255,0.5); /* Semi-transparent loader bg */
       z-index: 2000;
       display: flex;
       justify-content: center;
       align-items: center;
-      transition: opacity 0.5s;
+      transition: opacity 0.3s;
     }
-    
-    .loading-overlay.hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
-
+    body.dark .loader { background: rgba(0,0,0,0.5); }
+    .loader.hidden { opacity: 0; pointer-events: none; }
     .spinner {
-      width: 40px;
-      height: 40px;
-      border: 4px solid rgba(0,0,0,0.1);
-      border-left-color: var(--accent-color);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
+      width: 30px; height: 30px; border: 3px solid rgba(128,128,128,0.2);
+      border-left-color: var(--accent-color); border-radius: 50%; animation: s 0.8s linear infinite;
     }
-
-    @keyframes spin { 100% { transform: rotate(360deg); } }
-    
-    /* Hide Leaflet default routing box */
+    @keyframes s { 100% { transform: rotate(360deg); } }
     .leaflet-routing-container { display: none; }
   </style>
 </head>
 <body>
 
-  <div class="loading-overlay" id="loader">
-    <div class="spinner"></div>
-  </div>
-
+  <div class="loader" id="loader"><div class="spinner"></div></div>
   <button class="theme-toggle" id="themeToggle">Dark Mode</button>
 
   <div class="info-card" id="infoCard">
-    
     <div class="card-left">
-      <h3 class="info-title" id="hospitalName">Searching...</h3>
-      <div class="status-row">
-        <span class="badge">Nearest</span>
-        <span class="sub-text">Calculated via road network</span>
-      </div>
+      <h3 id="hospitalName">Searching...</h3>
+      <div><span class="badge">Nearest</span> <span class="sub-text">via Road</span></div>
     </div>
-
     <div class="divider"></div>
-
     <div class="card-right">
-      <div class="metric">
-        <span class="metric-value" id="timeValue">--</span>
-        <span class="metric-label">Est. Time</span>
-      </div>
-      
-      <div class="divider" style="height: 25px;"></div>
-
-      <div class="metric">
-        <span class="metric-value" id="distValue">--</span>
-        <span class="metric-label">Distance</span>
-      </div>
+      <div class="metric"><span class="metric-val" id="timeValue">--</span><span class="metric-lbl">Time</span></div>
+      <div class="metric"><span class="metric-val" id="distValue">--</span><span class="metric-lbl">Dist</span></div>
     </div>
-
   </div>
 
   <div id="map"></div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
-
   <script>
-    const map = L.map('map', { zoomControl: false }).setView([0, 0], 13);
+    const map = L.map('map', { zoomControl: false, attributionControl: false }).setView([0, 0], 13);
     
-    const lightTiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { attribution: '&copy; OSM &copy; CARTO' });
-    const darkTiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { attribution: '&copy; OSM &copy; CARTO' });
-
+    // Note: Tiles are images, so they can't be fully transparent, but they will sit cleanly in your layout
+    const lightTiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png');
+    const darkTiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png');
     lightTiles.addTo(map);
 
-    // Icons
-    const userIcon = L.icon({
-      iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
-      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-      iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
-    });
+    const userIcon = L.icon({iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png', iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34]});
+    const hospitalIcon = L.icon({iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png', iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34]});
 
-    const hospitalIcon = L.icon({
-      iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-      iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
-    });
-
-    // Theme Logic
-    const themeToggle = document.getElementById('themeToggle');
-    let isDarkMode = false;
-
-    themeToggle.addEventListener('click', () => {
-      isDarkMode = !isDarkMode;
+    let isDark = false;
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      isDark = !isDark;
       document.body.classList.toggle('dark');
-      if (isDarkMode) {
-        map.removeLayer(lightTiles);
-        darkTiles.addTo(map);
-        themeToggle.textContent = 'Light Mode';
-      } else {
-        map.removeLayer(darkTiles);
-        lightTiles.addTo(map);
-        themeToggle.textContent = 'Dark Mode';
-      }
+      if (isDark) { map.removeLayer(lightTiles); darkTiles.addTo(map); document.getElementById('themeToggle').innerText = 'Light Mode'; } 
+      else { map.removeLayer(darkTiles); lightTiles.addTo(map); document.getElementById('themeToggle').innerText = 'Dark Mode'; }
     });
-
-    // Logic
-    function haversine(lat1, lon1, lat2, lon2) {
-      const R = 6371; 
-      const dLat = (lat2 - lat1) * Math.PI / 180;
-      const dLon = (lon2 - lon1) * Math.PI / 180;
-      const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1 * Math.PI/180) * Math.cos(lat2 * Math.PI/180) * Math.sin(dLon/2) * Math.sin(dLon/2);
-      return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
-    }
-
-    function findNearest(userLat, userLon, hospitals) {
-      let nearest = null;
-      let minDist = Infinity;
-      hospitals.forEach(h => {
-        const dist = haversine(userLat, userLon, h.lat, h.lon);
-        if (dist < minDist) {
-          minDist = dist;
-          nearest = { ...h };
-        }
-      });
-      return nearest;
-    }
 
     navigator.geolocation.getCurrentPosition(async pos => {
-      const userLat = pos.coords.latitude;
-      const userLon = pos.coords.longitude;
+      const { latitude: uLat, longitude: uLon } = pos.coords;
+      L.marker([uLat, uLon], {icon: userIcon}).addTo(map);
+      map.setView([uLat, uLon], 14);
 
-      L.marker([userLat, userLon], {icon: userIcon}).addTo(map).bindPopup("You are here");
-      map.setView([userLat, userLon], 14);
-
-      const query = `https://overpass-api.de/api/interpreter?data=[out:json];node[amenity=hospital](around:5000,${userLat},${userLon});out;`;
-      
       try {
-        const response = await fetch(query);
-        const data = await response.json();
-        const hospitals = data.elements.map(h => ({ lat: h.lat, lon: h.lon, name: h.tags.name || 'Unnamed Hospital' }));
-
+        const data = await fetch(`https://overpass-api.de/api/interpreter?data=[out:json];node[amenity=hospital](around:5000,${uLat},${uLon});out;`).then(r=>r.json());
+        const hospitals = data.elements.map(h => ({ lat: h.lat, lon: h.lon, name: h.tags.name || 'Hospital' }));
         hospitals.forEach(h => L.marker([h.lat, h.lon], {icon: hospitalIcon}).addTo(map).bindPopup(h.name));
-
-        const nearest = findNearest(userLat, userLon, hospitals);
+        
+        // Simple dist calc
+        let nearest = null, min = Infinity;
+        hospitals.forEach(h => {
+          const d = Math.sqrt(Math.pow(h.lat-uLat,2) + Math.pow(h.lon-uLon,2));
+          if(d < min) { min = d; nearest = h; }
+        });
 
         if (nearest) {
           document.getElementById('hospitalName').innerText = nearest.name;
-          
-          const control = L.Routing.control({
-            waypoints: [L.latLng(userLat, userLon), L.latLng(nearest.lat, nearest.lon)],
-            lineOptions: { styles: [{color: '#007aff', opacity: 0.8, weight: 6}] }, // iOS Blue line
-            createMarker: () => null,
-            addWaypoints: false, draggableWaypoints: false, fitSelectedRoutes: true, show: false
-          }).addTo(map);
-
-          control.on('routesfound', function(e) {
-            const summary = e.routes[0].summary;
-            document.getElementById('distValue').innerText = `${(summary.totalDistance / 1000).toFixed(1)} km`;
-            document.getElementById('timeValue').innerText = `${Math.round(summary.totalTime / 60)} min`;
-            
+          L.Routing.control({
+            waypoints: [L.latLng(uLat, uLon), L.latLng(nearest.lat, nearest.lon)],
+            lineOptions: { styles: [{color: '#007aff', opacity: 0.8, weight: 6}] },
+            createMarker: () => null, addWaypoints: false, draggableWaypoints: false, fitSelectedRoutes: true, show: false
+          }).on('routesfound', e => {
+            const s = e.routes[0].summary;
+            document.getElementById('distValue').innerText = (s.totalDistance/1000).toFixed(1) + 'km';
+            document.getElementById('timeValue').innerText = Math.round(s.totalTime/60) + 'm';
             document.getElementById('infoCard').classList.add('active');
             document.getElementById('loader').classList.add('hidden');
-          });
-        } else {
-          alert("No hospitals found nearby.");
-          document.getElementById('loader').classList.add('hidden');
-        }
-      } catch (error) {
-        console.error(error);
-        alert("Data error.");
-        document.getElementById('loader').classList.add('hidden');
-      }
-    }, () => {
-      alert('Location access denied.');
-      document.getElementById('loader').classList.add('hidden');
-    });
+          }).addTo(map);
+        } else { alert("No hospitals found."); document.getElementById('loader').classList.add('hidden'); }
+      } catch (e) { document.getElementById('loader').classList.add('hidden'); }
+    }, () => { alert('Enable Location'); document.getElementById('loader').classList.add('hidden'); });
   </script>
 </body>
 </html>
